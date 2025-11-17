@@ -10,14 +10,17 @@
             
             {{-- Foto Produk --}}
             <div class="h-48 overflow-hidden">
+                <a href="{{ route('admin.products.show', $product) }}">
                 {{-- Asumsi kolom 'picture' menyimpan path gambar --}}
                 <img src="{{ asset('storage/' . $product->picture) }}" 
                      alt="Foto {{ $product->name }}" 
                      class="w-full h-full object-cover">
+                </a>
             </div>
 
             <div class="p-4">
                 {{-- Nama Barang --}}
+                <a href="{{ route('admin.products.show', $product) }}">
                 <h3 class="text-xl font-bold text-gray-800 mb-1">{{ $product->name }}</h3>
                 
                 {{-- Rating (Asumsi Anda punya helper getAvgRatingAttribute di Model Product) --}}
@@ -40,6 +43,7 @@
                 <p class="text-sm text-gray-600 mb-4">
                     Kategori: **{{ ucfirst($product->category) }}**
                 </p>
+                </a>
 
                 {{-- Tombol Aksi Admin --}}
                 <div class="flex justify-between items-center">                    

@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Order; 
+use App\Models\OrderDetail; 
+use App\Models\Product; 
+use App\Models\Review; 
+
+
 
 class User extends Authenticatable
 {
@@ -59,6 +65,13 @@ class User extends Authenticatable
         return $this->hasMany(Review::class, 'customer_id');
     }
 
+    public function vendorOrders()
+    {
+        // Order yang terkait dengan Product yang dimiliki oleh Vendor ini.
+        return Order::whereHas('product', function ($query) {
+            $query->where('vendor_id', $this->id);
+        });
+    }
     // -----------------------------------------------------------------
     // HELPER METHODS (Untuk pengecekan Role)
     // -----------------------------------------------------------------

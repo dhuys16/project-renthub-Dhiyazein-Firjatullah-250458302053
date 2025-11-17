@@ -154,7 +154,7 @@
                         {{-- KONTEN UNTUK USER YANG SUDAH LOGIN --}}
                         @php
                             $user = Auth::user(); 
-                            $dashboardRoute = $user->isAdmin() ? route('admin.dashboard') : ($user->isVendor() ? route('vendors.dashboard') : route('home'));
+                            $dashboardRoute = $user->isAdmin() ? route('admin.dashboard') : ($user->isVendor() ? route('vendors.dashboard') : route('products.index'));
                         @endphp
                         
                         <a href="{{ $dashboardRoute }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 font-semibold transition duration-150 ease-in-out">
@@ -211,7 +211,7 @@
               >
                 <li>
                   <a
-                    href="{{ route('login') }}"
+                    href="{{Route('products.index')}}"
                     class="flex items-center justify-center rounded-md bg-white px-7 py-[14px] text-center text-2xl font-medium text-dark shadow-1 transition duration-300 ease-in-out hover:bg-gray-2 hover:text-body-color"
                   >
                     Mulai Sewa

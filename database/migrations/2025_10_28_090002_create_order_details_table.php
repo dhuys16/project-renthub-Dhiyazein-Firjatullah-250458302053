@@ -19,7 +19,7 @@ return new class extends Migration
             
             $table->date('rent_start_date'); // DATE NOT NULL
             $table->date('rent_end_date'); // DATE NOT NULL
-            $table->integer('quantity'); // INT NOT NULL
+            $table->integer('quantity'); // dihapus
             $table->decimal('subtotal', 10, 2); // DECIMAL(10, 2) NOT NULL
             $table->timestamps();
             

@@ -6,7 +6,10 @@ use App\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\Passwords\Email;
 use App\Livewire\Auth\Passwords\Reset;
+use App\Http\Controllers\UserController;
 use App\Livewire\Auth\Passwords\Confirm;
+use App\Http\Controllers\PublicController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Vendor\VendorOrderController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -69,7 +72,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::resource('/products', ProductManagementController::class)->only(['index', 'destroy'])->names('admin.products');
+    Route::resource('/products', ProductManagementController::class)->only(['index', 'show', 'destroy'])->names('admin.products');
 
     Route::resource('/users', UserManagementController::class)->only(['index', 'destroy'])->names('admin.users');
 
@@ -94,4 +97,53 @@ Route::middleware(['auth', 'role:vendor,admin'])->prefix('vendor')->group(functi
         ->name('vendors.orders.confirm');
 });
 
+// ---------------------------------------------------------------------
+// 🌍 ROUTE GRUP PUBLIK (Guest, Customer, Vendor, Admin)
+// ---------------------------------------------------------------------
 
+Route::controller(PublicController::class)->group(function () {
+    
+    // Rute 1: Katalog Barang (products.index)
+    // Bisa diakses oleh semua, menampilkan tombol "Pesan Sekarang"
+    Route::get('/products', 'index')->name('products.index'); 
+
+    // Rute 2: Detail Produk & Daftar Review (products.show)
+    // Bisa diakses oleh semua, menampilkan form review.
+    // Catatan: Proses Booking/Review POST harus dilindungi middleware 'auth'.
+    Route::get('/products/{product}', 'show')->name('products.show');
+});
+
+// Rute Tambahan: Proses Pemesanan (Hanya POST, harus Login)
+Route::post('/orders/checkout', [CustomerController::class, 'processBooking'])
+    ->middleware('auth') // Wajib login untuk aksi ini
+    ->name('orders.checkout');
+
+Route::middleware(['auth', 'role:admin,vendor,customer'])->prefix('user')->name('user.')->group(function () {
+    
+    // Catatan: Prefix diubah dari 'customer' menjadi 'user' agar lebih netral
+    // -----------------------------------------------------
+    // Rute 2: Riwayat Pesanan & Pembatalan (Manajemen Pesanan)
+    // -----------------------------------------------------
+    Route::prefix('orders')->name('orders.')->controller(CustomerController::class)->group(function () {
+        // Logika Controller di sini harus memfilter pesanan HANYA milik Auth::id()
+        Route::get('/', 'orderHistory')->name('index');     
+        Route::get('/{order}', 'showOrder')->name('show');   
+        Route::post('/{order}/cancel', 'cancelOrder')->name('cancel'); 
+    });
+
+    // -----------------------------------------------------
+    // Rute 3: Pengaturan Profil (Edit Data User)
+    // -----------------------------------------------------
+    Route::prefix('profile')->name('profile.')->controller(UserController::class)->group(function () {
+        Route::get('/', 'showProfile')->name('show');       
+        Route::get('/edit', 'editProfile')->name('edit');   
+        Route::put('/', 'updateProfile')->name('update');   
+    });
+    
+    // -----------------------------------------------------
+    // Rute 4: Proses Review
+    // -----------------------------------------------------
+    // Catatan: Review harus selalu dilakukan oleh CUSTOMER, tetapi semua user bisa mengirimkan form ini.
+    // Otorisasi final (apakah boleh review) harus ada di Controller.
+    Route::post('/reviews', [PublicController::class, 'storeReview'])->name('reviews.store');
+});
