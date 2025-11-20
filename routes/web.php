@@ -74,7 +74,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     Route::resource('/products', ProductManagementController::class)->only(['index', 'show', 'destroy'])->names('admin.products');
 
-    Route::resource('/users', UserManagementController::class)->only(['index', 'destroy'])->names('admin.users');
+    Route::resource('/users', UserManagementController::class)->only(['index', 'show'])->names('admin.users');
 
 });
 
@@ -95,6 +95,17 @@ Route::middleware(['auth', 'role:vendor,admin'])->prefix('vendor')->group(functi
     // Custom Route: Aksi untuk Mengkonfirmasi Pesanan (Contoh: POST)
     Route::post('orders/{order}/confirm', [VendorOrderController::class, 'confirm'])
         ->name('vendors.orders.confirm');
+
+    Route::post('orders/{order}/reject', [VendorOrderController::class, 'reject'])
+        ->name('vendors.orders.reject');
+    
+        // Custom Route: Aksi Sedang Disewa (processing/paid -> rented)
+    Route::post('orders/{order}/rented', [VendorOrderController::class, 'rented'])
+         ->name('vendors.orders.rented');
+
+    // Custom Route: Aksi Selesai (rented -> completed)
+    Route::post('orders/{order}/complete', [VendorOrderController::class, 'complete'])
+         ->name('vendors.orders.complete');
 });
 
 // ---------------------------------------------------------------------
@@ -146,4 +157,14 @@ Route::middleware(['auth', 'role:admin,vendor,customer'])->prefix('user')->name(
     // Catatan: Review harus selalu dilakukan oleh CUSTOMER, tetapi semua user bisa mengirimkan form ini.
     // Otorisasi final (apakah boleh review) harus ada di Controller.
     Route::post('/reviews', [PublicController::class, 'storeReview'])->name('reviews.store');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // 1. Tampilkan Halaman Informasi Vendor
+    Route::get('/become-vendor', [UserController::class, 'becomeVendorForm'])
+         ->name('customer.vendor.form');
+
+    // 2. Aksi: Ubah Role User menjadi Vendor (dipicu oleh tombol "Jadi Vendor")
+    Route::post('/register-vendor-action', [UserController::class, 'registerVendor'])
+         ->name('customer.vendor.register');
 });

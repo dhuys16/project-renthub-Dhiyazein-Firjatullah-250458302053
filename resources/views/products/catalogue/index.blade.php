@@ -2,6 +2,8 @@
 
 @section('title', 'Katalog Barang RentHub')
 
+@section('part', 'Katalog RentHub')
+
 @section('content')
 <div class="container mx-auto px-4 py-8 lg:pt-5">
     
@@ -16,6 +18,9 @@
         
         <a href="{{ route('products.index', ['category' => 'electronics']) }}" class="ml-3 px-4 py-2 text-sm font-medium rounded-full {{ request('category') == 'electronics' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700' }} transition">Elektronik</a>
         
+        <a href="{{ route('products.index', ['category' => 'tools']) }}" class="ml-3 px-4 py-2 text-sm font-medium rounded-full {{ request('category') == 'tools' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700' }} transition">Alat-alat</a>
+
+        <a href="{{ route('products.index', ['category' => 'others']) }}" class="ml-3 px-4 py-2 text-sm font-medium rounded-full {{ request('category') == 'others' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700' }} transition">Lainnya</a>
         {{-- Tambahkan kategori ENUM lainnya di sini --}}
     </div>
 
@@ -47,7 +52,11 @@
                         $ratingInt = floor($rating);
                     @endphp
                     @for ($i = 1; $i <= 5; $i++)
-                        <i class="fas fa-star text-sm {{ $i <= $ratingInt ? 'text-yellow-500' : 'text-gray-300' }}"></i>
+                        @if ($i <= $ratingInt)
+                            <i class="fas fa-star text-sm text-yellow-500"></i> {{-- Bintang Terisi Penuh (Solid) --}}
+                        @else
+                            <i class="far fa-star text-sm text-gray-300"></i>  {{-- Bintang Kosong (Outline) --}}
+                        @endif
                     @endfor
                     <span class="ml-2 text-sm text-gray-500">({{ number_format($rating, 1) }})</span>
                 </div>

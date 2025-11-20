@@ -1,5 +1,9 @@
 @extends('layouts.customer')
 
+
+
+@section('part', 'Detail Produk')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
 
@@ -173,6 +177,19 @@
                         <input type="date" name="rent_end_date" id="rent_end_date" required 
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500 @error('rent_end_date') border-red-500 @enderror">
                         @error('rent_end_date')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>
+                        <select name="payment_method" id="payment_method" required
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2.5 focus:ring-indigo-500 focus:border-indigo-500 @error('payment_method') border-red-500 @enderror">
+                            <option value="" disabled selected>Pilih Metode</option>
+                            <option value="cash">Cash (Bayar Langsung)</option>
+                            <option value="transfer">Bank Transfer</option>
+                        </select>
+                        @error('payment_method')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>

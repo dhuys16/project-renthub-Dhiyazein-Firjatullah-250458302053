@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="{{asset('play/assets/css/animate.css')}}" />
     <link rel="stylesheet" href="{{asset('play/src/css/tailwind.css')}}" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
     </head>
 
     <body>

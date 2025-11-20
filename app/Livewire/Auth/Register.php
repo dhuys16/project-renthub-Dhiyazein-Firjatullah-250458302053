@@ -8,11 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Livewire\Component;
+use Livewire\Attributes\Rule;
 
 class Register extends Component
 {
     /** @var string */
     public $username = '';
+
+    public $nik = '';
+
+    public $name = '';
 
     /** @var string */
     public $email = '';
@@ -23,6 +28,8 @@ class Register extends Component
     /** @var string */
     public $address = ''; 
     
+    public $link_gmaps = ''; 
+    
     /** @var string */
     public $phone_number = ''; 
     // ...
@@ -30,20 +37,30 @@ class Register extends Component
     /** @var string */
     public $passwordConfirmation = '';
 
+    #[Rule('accepted', message: 'Anda harus menyetujui syarat dan ketentuan.')]
+    public bool $terms = false;
+
     public function register()
     {
         $this->validate([
             'username' => ['required', 'unique:users', 'string', 'max:50'],
             'email' => ['required', 'email', 'unique:users'],
             'address' => ['required', 'string'], 
+            'link_gmaps' => ['required', 'string'],
             'phone_number' => ['required', 'string', 'max:15'], 
             'password' => ['required', 'min:8', 'same:passwordConfirmation'],
+            'nik' => ['required', 'string', 'unique:users', 'max:16'],
+            'name' => ['required', 'string', 'max:255'],
+            'terms' => ['accepted'],
         ]);
 
         $user = User::create([
             'email' => $this->email,
+            'nik' => $this->nik,
+            'name' => $this->name,
             'username' => $this->username,
             'address' => $this->address, // <<< SIMPAN DATA BARU
+            'link_gmaps' => $this->link_gmaps, // <<< SIMPAN DATA BARU
             'phone_number' => $this->phone_number, // <<< SIMPAN DATA BARU
             'role' => 'customer',
             'password' => Hash::make($this->password),

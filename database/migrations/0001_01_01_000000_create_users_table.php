@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('nik', 16)->required()->unique();
             $table->string('username', 50)->unique();
+            $table->string('name')->required();
+            $table->string('photo_profile')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->required();
             $table->enum('role', ['admin','vendor', 'customer'])->default('customer');
             $table->string('address')->required();
+            $table->string('link_gmaps')->required();
             $table->string('phone_number', 20)->required();
             $table->rememberToken();
             $table->timestamps();

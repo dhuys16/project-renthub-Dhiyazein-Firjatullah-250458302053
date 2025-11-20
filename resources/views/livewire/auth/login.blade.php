@@ -1,61 +1,76 @@
-<div>
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <a href="{{ route('home') }}">
-            <x-logo class="w-auto h-16 mx-auto text-indigo-600" />
-        </a>
+<div class="full-component-wrapper">
+    
+    <section class="bg-gray-100 py-14 lg:py-[45px]">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap mx-4">
+                <div class="w-full px-4">
+                    <div
+                        class="wow fadeInUp relative mx-auto max-w-[525px] overflow-hidden rounded-xl shadow-form bg-white py-14 px-8 text-center sm:px-12 md:px-[60px]"
+                        data-wow-delay=".15s"
+                    >
+                        {{-- Header Logo --}}
+                        <div class="mb-10 text-center">
+                            <a href="{{ route('home') }}" class="mx-auto inline-block max-w-[160px]">
+                                {{-- Ganti dengan Logo Anda --}}
+                                <h1 class="text-3xl">RentHub</h1>
+                            </a>
+                            <h2 class="mt-4 text-3xl font-extrabold text-center text-gray-900 leading-9">
+                                Masuk ke Akunmu
+                            </h2>
+                        </div>
+                        
+                        {{-- FORMULIR LIVEWIRE DIMULAI DI SINI --}}
+                        <form wire:submit.prevent="authenticate">
+                            
+                            {{-- Input Email/Username (LoginId) --}}
+                            <div class="mb-[22px]">
+                                <input
+                                    wire:model.lazy="loginId"
+                                    type="text"
+                                    placeholder="Email Atau Username"
+                                    required
+                                    autofocus
+                                    class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-hidden border-stroke text-body-color placeholder:text-gray-600 focus:border-primary focus-visible:shadow-none @error('loginId') border-red-500 @enderror"
+                                />
+                                @error('loginId')<p class="mt-2 text-sm text-red-600 text-left">{{ $message }}</p>@enderror
+                            </div>
 
-        <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 leading-9">
-            Sign in to your account
-        </h2>
-        @if (Route::has('register'))
-            <p class="mt-2 text-sm text-center text-gray-600 leading-5 max-w">
-                Or
-                <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
-                    create a new account
-                </a>
-            </p>
-        @endif
-    </div>
+                            {{-- Input Password --}}
+                            <div class="mb-[22px]">
+                                <input
+                                    wire:model.lazy="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    required
+                                    class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-hidden border-stroke text-body-color placeholder:text-gray-600 focus:border-primary focus-visible:shadow-none @error('password') border-red-500 @enderror"
+                                />
+                                @error('password')<p class="mt-2 text-sm text-red-600 text-left">{{ $message }}</p>@enderror
+                            </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
-            <form wire:submit.prevent="authenticate">
-                <div>
-                    <label for="LoginId" class="block text-sm font-medium text-gray-700 leading-5">
-                        Email Atau Username
-                    </label>
+                            {{-- Submit Button --}}
+                            <div class="mb-9">
+                                <button
+                                    type="submit"
+                                    class="w-full px-5 py-3 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer border-primary bg-primary hover:bg-blue-dark focus:ring-indigo focus:border-indigo-700"
+                                >
+                                    Login
+                                </button>
+                            </div>
+                        </form>
 
-                    <div class="mt-1 rounded-md shadow-sm">
-                        <input wire:model.lazy="loginId" id="loginId" name="loginId" type="text" required autofocus class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('email') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror" />
+                        {{-- Register Link --}}
+                        <p class="text-base text-body-secondary">
+                            Belum punya akun?
+                            <a href="{{ route('register') }}" class="text-primary hover:underline">
+                                Daftar Sekarang
+                            </a>
+                        </p>
+
+                        {{-- Background SVG Circles (Dihapus karena tidak relevan dengan form) --}}
+                        
                     </div>
-
-                    @error('loginId')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
-
-                <div class="mt-6">
-                    <label for="password" class="block text-sm font-medium text-gray-700 leading-5">
-                        Password
-                    </label>
-
-                    <div class="mt-1 rounded-md shadow-sm">
-                        <input wire:model.lazy="password" id="password" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('password') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror" />
-                    </div>
-
-                    @error('password')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mt-6">
-                    <span class="block w-full rounded-md shadow-sm">
-                        <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                            Login
-                        </button>
-                    </span>
-                </div>
-            </form>
+            </div>
         </div>
+    </section>
     </div>
-</div>

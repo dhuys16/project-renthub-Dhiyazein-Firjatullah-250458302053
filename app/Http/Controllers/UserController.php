@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 
 class UserController extends Controller
@@ -56,5 +57,48 @@ class UserController extends Controller
 
         return redirect()->route('user.profile.show')
                          ->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function becomeVendorForm()
+    {
+        $user = Auth::user();
+        
+        // Pengecekan: Jika user sudah menjadi vendor, redirect.
+        if ($user->role === 'vendor') {
+            return redirect()->route('vendors.dashboard')->with('info', 'Anda sudah terdaftar sebagai Vendor.');
+        }
+
+        // View: resources/views/user/vendor/become-vendor-info.blade.php
+        return view('user.vendor.become-vendor-info');
+    }
+
+    /**
+     * Memproses aksi dan mengubah role Customer menjadi Vendor.
+     * Route: POST /register-vendor-action (customer.vendor.register)
+     */
+    public function registerVendor(Request $request)
+    {
+        $user = Auth::user();
+
+        // Pengecekan keamanan: Pastikan user belum menjadi vendor
+        if ($user->role === 'vendor') {
+            return redirect()->route('vendors.dashboard')->with('error', 'Anda sudah terdaftar sebagai Vendor.');
+        }
+
+        // 1. Update Role User
+        try {
+            $user->update([
+                'role' => 'vendor',
+                // Opsional: Set is_verified ke true/false
+            ]);
+
+            // 2. Redirect ke Dashboard Vendor Baru
+            return redirect()->route('vendors.dashboard')
+                             ->with('success', '🎉 Selamat! Akun Anda telah diubah menjadi Vendor. Silakan mulai mengelola produk Anda.');
+
+        } catch (\Exception $e) {
+            return back()
+                         ->with('error', 'Gagal memproses pendaftaran Vendor. Mohon coba lagi.');
+        }
     }
 }

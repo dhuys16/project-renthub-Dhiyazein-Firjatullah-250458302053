@@ -23,6 +23,7 @@ class CustomerController extends Controller
             'product_id' => 'required|exists:products,id',
             'rent_start_date' => 'required|date|after_or_equal:today',
             'rent_end_date' => 'required|date|after_or_equal:rent_start_date',
+            'payment_method' => 'required|string|in:cash,transfer', // Ditambahkan!
         ]);
 
         $product = Product::findOrFail($validatedData['product_id']);
@@ -56,14 +57,13 @@ class CustomerController extends Controller
         }
 
         // 3. SIMPAN DATA MENGGUNAKAN TRANSACTION
-        DB::beginTransaction();
-
-        try {
+      
             // A. INSERT KE TABEL 'orders' (Informasi Umum)
             $order = Order::create([
                 'customer_id' => Auth::id(), 
                 'total_price' => $totalPrice, // Total price pesanan
                 'status' => 'pending', 
+                'payment_method' => $validatedData['payment_method'],
                 // Tambahkan field umum lainnya jika ada (misal: payment_method_id)
             ]);
 
@@ -84,10 +84,6 @@ class CustomerController extends Controller
                 ->route('products.index', $order) 
                 ->with('success', 'Pemesanan berhasil dibuat! Silakan lihat detail untuk pembayaran.');
 
-        } catch (\Exception $e) {
-            DB::rollBack(); // Batalkan kedua operasi jika terjadi error
-            return back()->withInput()->with('error', 'Terjadi kesalahan saat memproses pemesanan. Detail: ' . $e->getMessage());
-        }
     }
 
 
@@ -118,7 +114,7 @@ class CustomerController extends Controller
     public function showOrder(Order $order) 
     {
         // Cek Otorisasi
-        if ($order->user_id !== Auth::id()) {
+        if ($order->customer_id !== Auth::id()) {
             abort(403, 'Akses ditolak. Pesanan ini bukan milik Anda.');
         }
 

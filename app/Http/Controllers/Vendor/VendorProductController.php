@@ -53,7 +53,7 @@ class VendorProductController extends Controller
             'description' => 'required|string',
             'price_per_day' => 'required|numeric|min:1000',
             'category' => ['required', Rule::in($this->productCategories)], 
-            'picture' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
+            'picture' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', 
         ]);
 
         // Handle upload file

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->timestamp('order_date')->nullable();
-            $table->decimal('total_price');
-            $table->enum('status', ['pending', 'confirmed', 'rented', 'canceled'])->default('pending');
-            $table->string('payment_method');
+            $table->decimal('total_price', 15, 2);
+            $table->enum('status', ['pending', 'confirmed', 'rented', 'canceled', 'completed'])->default('pending');
+            $table->string('payment_method')->nullable();
             $table->timestamps();
             $table->foreign('customer_id')->references('id')->on('users');
         });

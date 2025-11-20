@@ -18,12 +18,16 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
+        'nik',
+        'name',
         'username',
         'email',
         'password',
         'role',     // Kolom ENUM
         'phone_number',
         'address',
+        'link_gmaps',
+        'photo_profile',
     ];
 
     protected $hidden = [
@@ -43,9 +47,11 @@ class User extends Authenticatable
     /**
      * Relasi 1-ke-N: User sebagai Vendor dapat memiliki banyak Product.
      */
-    public function products(): HasMany
+    // app/Models/User.php
+
+    public function products()
     {
-        // Kunci asing di tabel products adalah 'vendor_id'
+        // Pastikan ini terhubung ke Model Product dan foreign key 'vendor_id'
         return $this->hasMany(Product::class, 'vendor_id'); 
     }
 

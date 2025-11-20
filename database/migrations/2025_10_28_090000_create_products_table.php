@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('picture');
             $table->text('description');
-            $table->decimal('price_per_day');
+            $table->decimal('price_per_day', 15, 2);
             $table->enum('category', ['electronics', 'photography', 'vehicles', 'tools', 'others']);
             $table->unsignedBigInteger('vendor_id');
             $table->timestamps();
