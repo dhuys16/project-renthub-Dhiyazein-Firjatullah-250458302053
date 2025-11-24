@@ -1,5 +1,9 @@
 @extends('layouts.customer')
 
+@section('title', 'Detail Pesanan #'.$order->id)
+
+@section('part', 'Detail Pesanan')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto mb-12">
     

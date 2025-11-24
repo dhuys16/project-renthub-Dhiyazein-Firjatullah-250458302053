@@ -22,9 +22,12 @@ class VendorProductController extends Controller
     public function index()
     {
         // KRITIS: Filter berdasarkan ID vendor yang sedang login
-        $products = Product::where('vendor_id', Auth::id()) 
-                            ->latest()
-                            ->paginate(15);
+        $products = Product::where('vendor_id', Auth::id())
+            // Menghitung rata-rata rating dan melampirkannya
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews') 
+            ->latest()
+            ->paginate(12);
 
         // Catatan: Ubah nama view ke 'vendor.products.index' jika folder Anda 'vendor'
         return view('vendors.products.index', compact('products'));
@@ -142,5 +145,32 @@ class VendorProductController extends Controller
         $product->delete();
 
         return redirect()->route('vendors.products.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    public function updateStatus(Product $product)
+    {
+        // 1. Otorisasi: Pastikan produk dimiliki oleh vendor yang sedang login
+        if ($product->vendor_id !== Auth::id()) {
+            return back()->with('error', 'Akses ditolak: Produk bukan milik Anda.');
+        }
+
+        // 2. Tentukan status baru dan pesan
+        if ($product->status === 'available') {
+            $newStatus = 'maintenance';
+            $message = "Status produk '{$product->name}' berhasil diubah menjadi Maintenance (Tidak Tersedia).";
+        } elseif ($product->status === 'maintenance') {
+            $newStatus = 'available';
+            $message = "Status produk '{$product->name}' berhasil diubah menjadi Available (Tersedia).";
+        } else {
+            // Opsional: Handle status lain (misalnya 'pending', 'rejected', dll.)
+            return back()->with('error', "Status saat ini ('{$product->status}') tidak dapat diubah secara langsung.");
+        }
+
+        // 3. Update status
+        $product->status = $newStatus;
+        $product->save();
+
+        // 4. Redirect
+        return back()->with('success', $message);
     }
 }

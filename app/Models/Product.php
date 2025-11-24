@@ -57,11 +57,28 @@ class Product extends Model
     /**
      * Relasi One-to-Many (Satu produk memiliki banyak review).
      */
-    public function reviews(): HasMany
+   public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
+    
+    // [TAMBAH BAGIAN INI: Accessor untuk Rata-rata Rating]
+    /**
+     * Mendapatkan rata-rata rating dari ulasan terkait (Attribute Accessor).
+     * Mengutamakan atribut 'reviews_avg_rating' yang dimuat oleh Controller.
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        // Cek apakah nilai agregat sudah dimuat (untuk menghindari N+1)
+        if (array_key_exists('reviews_avg_rating', $this->attributes)) {
+            // Gunakan nilai yang sudah dimuat
+            return (float) $this->attributes['reviews_avg_rating'];
+        }
 
+        // Jika belum dimuat (misal dipanggil di tempat lain), hitung secara langsung
+        // Tapi disarankan selalu memuatnya di controller untuk daftar produk
+        return $this->reviews()->avg('rating') ?? 0.0;
+    }
     // -----------------------------------------------------------------
     // HELPER METHOD (Opsional, untuk tampilan yang lebih bersih)
     // -----------------------------------------------------------------

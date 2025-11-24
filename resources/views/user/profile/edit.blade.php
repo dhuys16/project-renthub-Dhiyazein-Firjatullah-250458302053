@@ -1,5 +1,9 @@
 @extends('layouts.customer') 
 
+@section('title', 'Edit Profil')
+
+@section('part', 'Edit Profil')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto mb-12">
     
@@ -17,7 +21,7 @@
     <div class="bg-white p-8 rounded-xl shadow-lg">
         
         {{-- Form menggunakan metode POST, tapi menggunakan @method('PUT') untuk update --}}
-        <form action="{{ route('user.profile.update') }}" method="POST">
+        <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT') {{-- Penting untuk memicu method update() di Controller --}}
             
@@ -58,7 +62,7 @@
 
                     {{-- Nama Lengkap --}}
                     <div class="mb-4">
-                        <label for="username" class="block text-sm font-medium text-gray-700">Usernme</label>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
                         <input type="text" username="username" id="username" required
                                value="{{ old('username', $user->username) }}"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2.5 @error('username') border-red-500 @enderror">

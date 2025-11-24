@@ -124,5 +124,47 @@ class CustomerController extends Controller
         return view('user.orders.show', compact('order'));
     }
 
-    // ... (cancelOrder method tidak perlu diubah, karena ia bekerja pada Model Order)
+    public function cancelOrder(Order $order)
+    {
+        // 1. Otorisasi: Pastikan pesanan dimiliki oleh customer yang sedang login
+        // Asumsi kolom kunci asing di tabel orders adalah 'customer_id'
+        if ($order->customer_id !== Auth::id()) {
+            return back()->with('error', 'Akses ditolak: Pesanan bukan milik Anda.');
+        }
+
+        // 2. Validasi Status: Pesanan hanya dapat dibatalkan jika statusnya masih 'pending' atau 'confirmed'.
+        // Sesuaikan daftar status di bawah ini agar sesuai dengan ENUM/konstanta di model Order Anda.
+        $allowedStatusesToCancel = ['pending', 'confirmed'];
+        
+        if (!in_array($order->status, $allowedStatusesToCancel)) {
+            return back()->with('error', 
+                "Pesanan tidak dapat dibatalkan karena statusnya sudah '{$order->status}'.");
+        }
+
+        // 3. Update Status
+        $order->status = 'canceled';
+        $order->save();
+
+        // 4. Redirect dengan pesan sukses
+        // Asumsi Anda memiliki route 'user.orders.index'
+        return redirect()->route('user.orders.index')
+            ->with('success', "Pesanan #{$order->id} berhasil dibatalkan.");
+    }
+
+    public function showVendorProfile(User $vendor)
+    {
+        // 1. Validasi: Pastikan user ini benar-benar vendor
+        if ($vendor->role !== 'vendor') {
+            return redirect()->route('products.index')->with('error', 'Profil yang diminta bukan profil Vendor.');
+        }
+
+        // 2. Muat produk yang tersedia dari vendor tersebut
+        $products = Product::where('vendor_id', $vendor->id)
+                            ->withAvg('reviews', 'rating')->withCount('reviews')
+                            ->latest()
+                            ->paginate(12);
+
+        // 3. Tampilkan view baru: resources/views/products/vendor_catalogue/show.blade.php
+        return view('products.vendor_catalogue.show', compact('vendor', 'products'));
+    }
 }

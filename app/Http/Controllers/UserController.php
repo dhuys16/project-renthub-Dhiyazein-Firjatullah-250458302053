@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class UserController extends Controller
@@ -46,17 +47,41 @@ class UserController extends Controller
         $user = Auth::user();
 
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            // Rule::unique('users')->ignore($user->id) memastikan user bisa menggunakan email lamanya
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'phone' => 'nullable|string|max:15',
-            // Jika ada field lain, tambahkan di sini
+            'name' => 'nullable|string|max:255',
+            'email' => ['nullable', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone_number' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:500',
+            'photo_profile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'username' => ['nullable', 'string', 'max:50', Rule::unique('users')->ignore($user->id)], // Unique rule untuk username
+            'link_gmaps' => 'nullable|url|max:255',
         ]);
 
+        // === START: LOGIKA PENANGANAN FILE UPLOAD KRITIS ===
+        if ($request->hasFile('photo_profile')) {
+            
+            // Hapus foto lama dari storage (jika ada)
+            if ($user->photo_profile) {
+                Storage::disk('public')->delete($user->photo_profile);
+            }
+
+            // Simpan foto baru ke folder 'profiles' dan dapatkan path-nya
+            $path = $request->file('photo_profile')->store('profiles', 'public');
+            
+            // Ganti objek file dengan path string di array data yang divalidasi
+            $validatedData['photo_profile'] = $path;
+
+        } else {
+            // Jika user tidak mengunggah file baru, hapus key 'photo_profile' dari array
+            // agar Laravel tidak mencoba mengisi kolom DB dengan nilai kosong (string kosong)
+            unset($validatedData['photo_profile']);
+        }
+        // === END: LOGIKA FILE UPLOAD ===
+
+        // Update data termasuk username dan photo_profile (jika ada path baru)
         $user->update($validatedData);
 
         return redirect()->route('user.profile.show')
-                         ->with('success', 'Profil berhasil diperbarui!');
+                        ->with('success', 'Profil berhasil diperbarui!');
     }
 
     public function becomeVendorForm()

@@ -17,19 +17,26 @@ class PublicController extends Controller
         // Logika query untuk menampilkan katalog produk
         $query = Product::query();
 
+        $query->where('status', 'available');
+        // Filter wajib: Hanya tampilkan produk yang memiliki harga (> 0)
+        // [PERBAIKAN 2: Muat rata-rata rating menggunakan Aggregate]
+        // Ini akan menambahkan kolom 'reviews_avg_rating' ke hasil query produk.
+        $query->withAvg('reviews', 'rating');
+        $query->withCount('reviews');
+
         // Filter wajib: Hanya tampilkan produk yang memiliki harga (> 0)
         $query->where('price_per_day', '>', 0);
         
         // Contoh filter kategori (menggunakan ENUM 'category')
-        if ($request->has('category') && $request->category !== 'all') {
+        if ($request->has('category') && $request->category !== 'all')  {
             // Daftar ENUM kategori (harus sama dengan di migrasi/Controller Admin)
             $categories = ['electronics', 'photography', 'vehicles', 'tools', 'others'];
             
             if (in_array($request->category, $categories)) {
                 $query->where('category', $request->category);
+            
             }
         }
-
         $products = $query->latest()->paginate(12);
 
         // Perlu dipastikan view ini ada: resources/views/products/catalogue/index.blade.php

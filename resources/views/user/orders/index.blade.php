@@ -1,5 +1,9 @@
 @extends('layouts.customer') 
 
+@section('title', 'Riwayat Pesanan')
+
+@section('part', 'Riwayat Pesanan')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
     <div class="mb-6 flex justify-between items-center">

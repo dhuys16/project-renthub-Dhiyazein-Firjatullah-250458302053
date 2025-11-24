@@ -26,17 +26,18 @@
                 {{-- Rating (Asumsi Anda punya helper getAvgRatingAttribute di Model Product) --}}
                 <div class="flex items-center text-yellow-500 mb-3">
                     @php
-                        // Simulasi Rating (Ganti dengan logika nyata dari Model/DB)
-                        $rating = rand(3, 5); // Contoh: 3, 4, atau 5
+                        // Menggunakan accessor yang sudah dibuat
+                        $rating = $product->average_rating ?? 0; 
+                        $ratingInt = floor($rating);
                     @endphp
                     @for ($i = 1; $i <= 5; $i++)
-                        @if ($i <= $rating)
-                            <i class="fas fa-star text-sm"></i>
+                        @if ($i <= $ratingInt)
+                            <i class="fas fa-star text-sm text-yellow-500"></i>
                         @else
                             <i class="far fa-star text-sm text-gray-300"></i>
                         @endif
-                    @endfor
-                    <span class="ml-2 text-sm text-gray-500">({{ $rating }}.0)</span>
+                     @endfor
+                    <span class="ml-2 text-sm text-gray-500">({{ number_format($rating, 1) }})</span>
                 </div>
 
                 {{-- Detail Tambahan --}}

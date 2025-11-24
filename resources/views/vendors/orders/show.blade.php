@@ -1,5 +1,7 @@
 @extends('layouts.vendor')
 
+@section('title', 'Detail Pesanan #'.$order->id)
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
     
@@ -93,22 +95,33 @@
             {{-- Informasi Pelanggan (DIKOREKSI: Menggunakan $customer) --}}
             <div class="bg-white p-6 rounded-xl shadow-lg">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Informasi Pelanggan</h3>
-                <table class="w-full text-left text-sm text-gray-600">
-                    <tbody>
-                        <tr class="border-b">
-                            <th class="py-2 pr-4 font-medium w-1/3">Nama Pelanggan</th>
-                            <td class="py-2">{{ $customer->username ?? 'User Dihapus' }}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="py-2 pr-4 font-medium">Email</th>
-                            <td class="py-2">{{ $customer->email ?? '-' }}</td>
-                        </tr>
-                        <tr class="border-b">
-                            <th class="py-2 pr-4 font-medium">Nomor Telepon</th>
-                            <td class="py-2">{{ $customer->phone_number ?? '-' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <a href="{{ route('customers.show', $order->customer) }}" 
+                    class="block p-3 -m-3 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out cursor-pointer">
+                    
+                    <div class="flex items-center space-x-4">
+                        @php
+                            // Tentukan sumber gambar (path) - Disesuaikan menggunakan $customer
+                            // Asumsi kolom foto di DB adalah 'photo_profile'
+                            // Path default disesuaikan dengan struktur file yang terunggah (public/assets/img/user.jpg)
+                            $photoPath = $customer->photo_profile 
+                                ? asset('storage/' . $customer->photo_profile) 
+                                : asset('assets/img/user.jpg'); 
+                        @endphp
+                        <img class="h-12 w-12 rounded-full object-cover" 
+                            src="{{ $photoPath }}" 
+                            alt="{{ $order->customer->name }}">
+
+                        <div>
+                            {{-- Nama Pelanggan --}}
+                            <p class="text-base font-bold text-gray-900 leading-none">
+                                {{ $order->customer->name }} 
+                                <i class="fas fa-external-link-alt ml-1 text-xs text-indigo-500"></i>
+                            </p>
+                            {{-- Email Pelanggan --}}
+                            <p class="text-sm text-gray-500 mt-1">{{ $order->customer->email }}</p>
+                        </div>
+                    </div>
+                </a>
             </div>
             
             {{-- TAMPILAN JIKA DITOLAK (CANCELLED) --}}

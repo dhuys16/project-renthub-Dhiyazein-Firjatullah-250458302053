@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'RentHub')
+
 @section('content')
      <!-- ====== Navbar Section Start -->
     <div

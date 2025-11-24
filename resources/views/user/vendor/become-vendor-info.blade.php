@@ -1,5 +1,9 @@
 @extends('layouts.customer')
 
+@section('title', 'Menjadi Vendor RentHub')
+
+@section('part', 'Info Menjadi Vendor')
+
 @section('content')
 <div class="container mx-auto p-4 md:p-8">
     <div class="bg-white p-8 rounded-xl shadow-lg">

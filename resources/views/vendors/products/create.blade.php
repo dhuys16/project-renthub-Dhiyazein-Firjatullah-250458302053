@@ -1,5 +1,7 @@
 @extends('layouts.vendor')
 
+@section('title','Tambah Produk Baru')
+
 @section('content')
 
 <div class="w-full px-6 py-6 mx-auto">

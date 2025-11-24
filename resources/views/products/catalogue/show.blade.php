@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-
+@section('title', 'Detail Produk: ' . $product->name)
 
 @section('part', 'Detail Produk')
 
@@ -17,7 +17,7 @@
                class="inline-block px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition">
                 ← Kembali ke Daftar
             </a>
-            {{-- Tambahkan logika otoritas di sini untuk tombol Edit jika perlu --}}
+            {{-- Tambahkan logika otoritas di sini untuku tombol Edit jika perlu --}}
         </div>
     </div>
     
@@ -94,18 +94,43 @@
                 </div>
             </div>
             
-            {{-- INFORMASI KEPEMILIKAN (TETAP DI BAWAH) --}}
-            <div class="mt-8 pt-4 border-t border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Informasi Kepemilikan</h3>
-                <p class="text-sm text-gray-600">
-                    Diunggah Oleh: **{{ $product->vendor->username ?? 'Vendor Tidak Ditemukan' }}**
-                </p>
-                <p class="text-sm text-gray-600 mt-1">
-                    Email Vendor: <span class="font-medium text-indigo-600">{{ $product->vendor->email ?? '-' }}</span>
-                </p>
-                <p class="text-xs text-gray-400 mt-2">
-                    Terakhir Diperbarui: {{ $product->updated_at->diffForHumans() }}
-                </p>
+            <div class="card p-4 mb-6 shadow-lg">
+                <h4 class="font-semibold text-lg mb-3">
+                    <i class="fas fa-store mr-2 text-indigo-500"></i> Info Pemilik
+                </h4>
+                
+                {{-- Pastikan relasi vendor tersedia di $product --}}
+                @php
+                    $vendor = $product->vendor; // Mengambil objek Vendor (Model User)
+                    
+                    // Logika foto profil vendor yang telah dikonfirmasi berhasil
+                    $photoPath = $vendor->photo_profile 
+                        ? asset('storage/' . $vendor->photo_profile) 
+                        : asset('assets/img/user.jpg');
+                @endphp
+
+                {{-- MODIFIKASI: Bungkus seluruh konten info dalam tag <a> yang mengarah ke profil Vendor --}}
+                <a href="{{ route('user.public.vendors.show', $vendor) }}" 
+                class="block p-3 -m-3 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out cursor-pointer">
+                    
+                    <div class="flex items-center space-x-4">
+                        
+                        {{-- Foto Profil Vendor --}}
+                        <img class="h-14 w-14 rounded-full object-cover border-2 border-indigo-300" 
+                            src="{{ $photoPath }}" 
+                            alt="{{ $vendor->name }}">
+
+                        <div>
+                            {{-- Nama Vendor --}}
+                            <p class="text-base font-bold text-gray-900 leading-tight">
+                                {{ $vendor->name }}
+                                <i class="fas fa-chevron-right ml-1 text-xs text-indigo-500"></i>
+                            </p>
+                            {{-- Kontak Cepat/Tujuan Link --}}
+                            <p class="text-sm text-gray-500 mt-1">Lihat Profil & Semua Produk</p>
+                        </div>
+                    </div>
+                </a>
             </div>
             
             {{-- ULASAN PELANGGAN (DIPINDAHKAN KE BAWAH INFORMASI KEPEMILIKAN) --}}
@@ -131,7 +156,7 @@
                                     @endfor
                                 </span>
                             </div>
-                            <p class="text-sm text-gray-700 italic mb-1">"{{ $review->comment }}"</p>
+                            <p class="text-sm text-gray-700 italic mb-1">{{ $review->comment }}</p>
                             <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                         </div>
                     @empty

@@ -44,30 +44,35 @@
                 {{-- Kategori --}}
                 <p class="text-xs text-indigo-600 font-medium mb-3">{{ ucfirst($product->category) }}</p>
 
-                {{-- Rating (Model Accessor) --}}
-                <div class="flex items-center text-yellow-500 mb-3">
-                    @php
-                        // Memastikan variabel $rating didefinisikan (menggunakan Accessor/Helper Model)
-                        $rating = $product->average_rating ?? 0;
-                        $ratingInt = floor($rating);
-                    @endphp
+                @php
+                    // Ambil rating rata-rata dari Model (asumsi menggunakan 'reviews_avg_rating' dari withAvg)
+                    $rating = $product->reviews_avg_rating ?? 0;
+                    $ratingInt = floor($rating); // Pembulatan ke bawah untuk bintang penuh
+                    $reviewCount = $product->reviews_count ?? 0;
+                @endphp
+
+                {{-- KONTEN RATING --}}
+                <div class="flex items-center mb-1">
+                    
+                    {{-- ⭐ Menampilkan Bintang ⭐ --}}
                     @for ($i = 1; $i <= 5; $i++)
-                        @if ($i <= $ratingInt)
-                            <i class="fas fa-star text-sm text-yellow-500"></i> {{-- Bintang Terisi Penuh (Solid) --}}
-                        @else
-                            <i class="far fa-star text-sm text-gray-300"></i>  {{-- Bintang Kosong (Outline) --}}
-                        @endif
+                        <i class="fas fa-star text-sm 
+                            {{ $i <= $ratingInt ? 'text-yellow-500' : 'text-gray-300' }}"></i>
                     @endfor
-                    <span class="ml-2 text-sm text-gray-500">({{ number_format($rating, 1) }})</span>
+
+                    {{-- Menampilkan Nilai Rating (Angka) dan Jumlah Review --}}
+                    <span class="ml-2 text-sm text-gray-500">
+                        ({{ number_format($rating, 1) }})
+                    </span>
                 </div>
 
-                {{-- Harga --}}
-                <div class="mt-auto pt-3">
-                    <p class="text-2xl font-extrabold text-gray-900 mb-4">
-                        {{ $product->getFormattedPriceAttribute() }}
-                        <span class="text-sm font-normal text-gray-500">/ Hari</span>
-                    </p>
-                </div>
+                {{-- Tambahkan di bawah rating --}}
+                <p class="text-xs text-gray-400 mb-3">Total {{ $reviewCount }} Ulasan</p> 
+
+                <h4 class="text-xl font-bold text-gray-900 mb-4">
+                    Rp {{ number_format($product->price_per_day, 0, ',', '.') }} / Hari
+                </h4>
+
                 </a>
                 {{-- Tombol Pesan Sekarang --}}
                 {{-- KRITIS: Mengarahkan ke Route products.show --}}

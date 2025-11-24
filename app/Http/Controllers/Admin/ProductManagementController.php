@@ -19,9 +19,12 @@ class ProductManagementController extends Controller
      */
     public function index()
     {
-        $products = Product::with('vendor') 
-                            ->latest()
-                            ->paginate(15);
+        $products = Product::query()
+            // Menghitung rata-rata rating dan melampirkannya sebagai 'reviews_avg_rating'
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews') 
+            ->latest()
+            ->paginate(12);
 
         return view('admin.products.index', compact('products'));
     }

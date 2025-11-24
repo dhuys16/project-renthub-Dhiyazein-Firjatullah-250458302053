@@ -85,12 +85,16 @@ Route::middleware(['auth', 'role:vendor,admin'])->prefix('vendor')->group(functi
     Route::resource('products', VendorProductController::class) 
         ->names('vendors.products');
 
+    Route::patch('products/{product}/status', [VendorProductController::class, 'updateStatus'])->name('products.update.status');
+
     // -----------------------------------------------------
     // Rute 3: Manajemen Pesanan Masuk (Orders)
     // -----------------------------------------------------
     Route::resource('orders', VendorOrderController::class)
         ->only(['index', 'show']) // Hanya perlu melihat daftar dan detail
         ->names('vendors.orders');
+
+    Route::get('customers/{customer}', [VendorOrderController::class, 'showCustomerProfile'])->name('customers.show');
         
     // Custom Route: Aksi untuk Mengkonfirmasi Pesanan (Contoh: POST)
     Route::post('orders/{order}/confirm', [VendorOrderController::class, 'confirm'])
@@ -151,6 +155,7 @@ Route::middleware(['auth', 'role:admin,vendor,customer'])->prefix('user')->name(
         Route::put('/', 'updateProfile')->name('update');   
     });
     
+    Route::get('vendors/{vendor}', [CustomerController::class, 'showVendorProfile'])->name('public.vendors.show');
     // -----------------------------------------------------
     // Rute 4: Proses Review
     // -----------------------------------------------------

@@ -162,14 +162,30 @@
                 <!-- User avatar button -->
                 <div class="relative" x-data="{ open: false }">
                   <button
-                    @click="open = !open; $nextTick(() => { if(open){ $refs.userMenu.focus() } })"
-                    type="button"
-                    aria-haspopup="true"
-                    :aria-expanded="open ? 'true' : 'false'"
-                    class="transition-opacity duration-200 rounded-full dark:opacity-75 dark:hover:opacity-100 focus:outline-none focus:ring dark:focus:opacity-100"
+                      @click="open = !open; $nextTick(() => { if(open){ $refs.userMenu.focus() } })"
+                      type="button"
+                      aria-haspopup="true"
+                      :aria-expanded="open ? 'true' : 'false'"
+                      class="transition-opacity duration-200 rounded-full dark:opacity-75 dark:hover:opacity-100 focus:outline-none focus:ring dark:focus:opacity-100"
                   >
-                    <span class="sr-only">User menu</span>
-                    <img class="w-10 h-10 rounded-full" src="{{asset('kwd/public/build/images/avatar.jpg')}}" alt="Ahmed Kamel" />
+                      <span class="sr-only">User menu</span>
+                      
+                      {{-- LOGIKA FOTO PROFIL DINAMIS DIMULAI --}}
+                      @php
+                          // Ambil objek user yang sedang login
+                          $loggedInUser = Auth::user(); 
+
+                          // Tentukan sumber gambar berdasarkan data DB
+                          $photoPath = $loggedInUser && $loggedInUser->photo_profile 
+                              ? asset('storage/' . $loggedInUser->photo_profile) 
+                              : asset('assets/img/user.jpg'); 
+                      @endphp
+                      
+                      <img class="w-10 h-10 rounded-full object-cover" 
+                          src="{{ $photoPath }}" 
+                          alt="{{ $loggedInUser->name ?? 'User Photo' }}" />
+                      {{-- LOGIKA FOTO PROFIL DINAMIS BERAKHIR --}}
+                      
                   </button>
 
                   <!-- User dropdown menu -->
@@ -318,9 +334,9 @@
                     :class="{'bg-primary-100 dark:bg-primary': route()->is('customer.profile.*')}"
                 >
                     <span aria-hidden="true">
-                      <i class="fa-solid fa-user"></i>
+                      <i class="fa-solid fa-book-open"></i>
                     </span>
-                    <span class="ml-2 text-sm"> Edit Profil </span>
+                    <span class="ml-2 text-sm">Jadilah Vendor</span>
                 </a>
 
                 {{-- 4. Log Out (Menggunakan Form POST untuk keamanan) --}}

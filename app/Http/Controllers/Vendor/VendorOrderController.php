@@ -195,4 +195,16 @@ class VendorOrderController extends Controller
         return redirect()->route('vendors.orders.show', $order)
                          ->with('success', '✅ Pesanan berhasil diselesaikan. Status diubah menjadi **Completed**.');
     }
+
+    public function showCustomerProfile(User $customer)
+    {
+        // PENTING: Anda mungkin perlu menambahkan otorisasi di sini
+        // Misalnya: hanya izinkan melihat profil customer yang pernah bertransaksi dengan vendor ini.
+        // if (!$this->vendorHasRelationshipWithCustomer($customer)) { ... }
+
+        // Asumsi data yang diperlukan (address, phone, dll.) sudah ada di objek $customer
+        
+        // Mengarahkan ke view baru
+        return view('vendors.customers.show', compact('customer'));
+    }
 }

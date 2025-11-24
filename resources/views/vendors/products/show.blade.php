@@ -1,5 +1,7 @@
 @extends('layouts.vendor')
 
+@section('title', 'Detail Produk: ' . $product->name)
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
 
@@ -50,10 +52,7 @@
                                 <th class="py-2 pr-4 font-medium w-1/3">Harga Sewa</th>
                                 <td class="py-2">**{{ $product->price_per_day ? $product->getFormattedPriceAttribute() . ' / Hari' : '-' }}**</td>
                             </tr>
-                            <tr class="border-b">
-                                <th class="py-2 pr-4 font-medium">Stok Tersedia</th>
-                                <td class="py-2 text-lg font-bold text-green-600">{{ $product->stock }} Unit</td>
-                            </tr>
+
                             <tr class="border-b">
                                 <th class="py-2 pr-4 font-medium">Kategori</th>
                                 <td class="py-2">{{ ucfirst($product->category) }}</td>
@@ -99,18 +98,57 @@
                 </div>
             </div>
 
-            {{-- Detail Vendor --}}
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Informasi Kepemilikan</h3>
-                <p class="text-sm text-gray-600">
-                    Diunggah Oleh: **{{ $product->vendor->username ?? 'Vendor Tidak Ditemukan' }}**
-                </p>
-                <p class="text-sm text-gray-600 mt-2">
-                    Email Vendor: <span class="font-medium text-indigo-600">{{ $product->vendor->email ?? '-' }}</span>
-                </p>
-                <p class="text-xs text-gray-400 mt-3">
-                    Terakhir Diperbarui: {{ $product->updated_at->diffForHumans() }}
-                </p>
+            <div class="bg-white p-6 rounded-lg shadow-xl mb-6 border-t-4 border-indigo-500">
+                <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-cogs mr-3 text-indigo-500"></i> Kelola Status Produk
+                </h3>
+
+                <div class="border-t pt-4">
+                    <p class="max-w-[80%] text-gray-700 mb-4 text-lg">
+                        Status saat ini: 
+                        {{-- Menampilkan status dengan styling dinamis --}}
+                        <span class="font-bold uppercase text-sm px-3 py-1 ml-2 rounded-full 
+                        @if ($product->status == 'available') 
+                            bg-green-100 text-green-800
+                        @elseif ($product->status == 'maintenance') 
+                            bg-yellow-100 text-yellow-800
+                        @else
+                            bg-gray-100 text-gray-800
+                        @endif">
+                            {{ $product->status }}
+                        </span>
+                    </p>
+
+
+                    @if ($product->status == 'available' || $product->status == 'maintenance')
+                        @php
+                            // Logika penentuan status baru dan tombol
+                            $nextStatus = ($product->status === 'available') ? 'maintenance' : 'available';
+                            $buttonLabel = ($product->status === 'available') ? 'Ubah ke Maintenance' : 'Ubah ke Available';
+                            $buttonClass = ($product->status === 'available') ? 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-500' : 'bg-green-500 hover:bg-green-600 focus:ring-green-500';
+                            $confirmMessage = "Apakah Anda yakin ingin mengubah status produk ini menjadi " . ucfirst($nextStatus) . "?";
+                        @endphp
+                    
+                        {{-- Form untuk mengirim permintaan perubahan status --}}
+                        <form action="{{ route('products.update.status', $product) }}" 
+                            method="POST" 
+                            onsubmit="return confirm('{{ $confirmMessage }}')">
+                            @csrf
+                            @method('PATCH')
+                            
+                            <button type="submit" 
+                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent {{ $buttonClass }} py-3 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2">
+                                <i class="fas fa-exchange-alt mr-2"></i> {{ $buttonLabel }}
+                            </button>
+                        </form>
+                    @else
+                        <div class="p-3 bg-red-50 border-l-4 border-red-500 text-red-700">
+                            <p class="text-sm">
+                                Produk ini berstatus **{{ ucfirst($product->status) }}**. Perubahan status manual tidak diizinkan.
+                            </p>
+                        </div>
+                    @endif
+                </div>
             </div>
             
         </div>
