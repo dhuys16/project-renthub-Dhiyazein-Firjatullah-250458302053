@@ -155,7 +155,7 @@
                                     @error('comment')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                                 </div>
 
-                                <button type="submit" class="w-full px-4 py-3 text-white font-medium rounded-lg !bg-indigo-600 hover:bg-indigo-700 transition duration-150">
+                                <button type="submit" class="w-full px-4 py-4 text-white font-medium rounded-lg !bg-indigo-600 hover:bg-indigo-700 transition duration-150">
                                     Kirim Ulasan
                                 </button>
                             </form>
@@ -175,7 +175,7 @@
                         @csrf
                         <button type="submit" 
                                 onclick="return confirm('PERINGATAN! Apakah Anda benar-benar yakin ingin membatalkan pesanan #{{ $order->id }}?')"
-                                class="w-full px-4 py-3 text-white font-medium rounded-lg bg-red-600 hover:bg-red-700 transition duration-150">
+                                class="w-full px-4 py-4 text-white font-medium rounded-lg !bg-red-600 hover:bg-red-700 transition duration-150">
                             Batalkan Pesanan Ini
                         </button>
                     </form>

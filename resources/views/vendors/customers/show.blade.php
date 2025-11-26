@@ -2,6 +2,8 @@
 
 @section('title', 'Profil Pelanggan: ' . $customer->username)
 
+@section('part', 'Pelanggan')
+
 @section('content')
 <div class="w-full py-6 px-6">
     

@@ -75,6 +75,8 @@ class ProductManagementController extends Controller
     public function show(Product $product)
     {
         // Tampilkan view detail produk
+        $product->loadCount('orderDetails');
+
         return view('admin.products.show', compact('product'));
     }
 

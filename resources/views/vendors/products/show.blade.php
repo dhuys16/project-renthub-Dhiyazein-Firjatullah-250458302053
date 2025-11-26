@@ -2,6 +2,8 @@
 
 @section('title', 'Detail Produk: ' . $product->name)
 
+@section('part', 'Detail Produk')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
 
@@ -125,7 +127,7 @@
                             // Logika penentuan status baru dan tombol
                             $nextStatus = ($product->status === 'available') ? 'maintenance' : 'available';
                             $buttonLabel = ($product->status === 'available') ? 'Ubah ke Maintenance' : 'Ubah ke Available';
-                            $buttonClass = ($product->status === 'available') ? 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-500' : 'bg-green-500 hover:bg-green-600 focus:ring-green-500';
+                            $buttonClass = ($product->status === 'available') ? '!bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-500' : '!bg-green-500 hover:bg-green-600 focus:ring-green-500';
                             $confirmMessage = "Apakah Anda yakin ingin mengubah status produk ini menjadi " . ucfirst($nextStatus) . "?";
                         @endphp
                     

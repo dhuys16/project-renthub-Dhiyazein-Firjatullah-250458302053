@@ -63,7 +63,7 @@
                     {{-- Nama Lengkap --}}
                     <div class="mb-4">
                         <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" username="username" id="username" required
+                        <input type="text" name="username" id="username" required
                                value="{{ old('username', $user->username) }}"
                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2.5 @error('username') border-red-500 @enderror">
                         @error('username')
@@ -135,7 +135,7 @@
             </div>
 
             <div class="mt-8 pt-4 border-t border-gray-200">
-                <button type="submit" class="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white !bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-base font-medium rounded-md text-white !bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
                     Simpan Perubahan
                 </button>
             </div>

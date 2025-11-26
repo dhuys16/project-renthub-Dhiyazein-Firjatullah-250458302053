@@ -3,17 +3,21 @@
 @section('title', 'Admin')
 
 @section('body')
-  <body class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500">
-    <div class="absolute w-full bg-blue-500 h-full"></div>
+  <body class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-blue-500 text-slate-500">
     <!-- sidenav  -->
     <aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0" aria-expanded="false">
       <div class="h-19">
-        <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden" sidenav-close></i>
-        <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap dark:text-white text-slate-700" href="{{route('home')}}" target="_blank">
-          <span class="ml-1 font-semibold transition-all duration-200 text-2xl text-center ease-nav-brand">RentHub</span>
-        </a>
+          <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times dark:text-white text-slate-400 xl:hidden" sidenav-close></i>
+          
+          {{-- [PERBAIKAN]: Tambahkan class 'flex justify-center items-center' pada tag <a> --}}
+          <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap dark:text-white text-slate-700 flex justify-center items-center" href="{{route('home')}}">
+              
+              {{-- Hapus class 'items-center' dari <img> karena tidak ada gunanya di sini --}}
+              <img src="{{asset('assets/img/2.jpg')}}" class="" width="150px" alt="main_logo" />
+              
+              {{-- (Jika Anda menggunakan elemen RentHub yang lama, pastikan itu dihapus atau ditangani) --}}
+          </a>
       </div>
-
       <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
 
       <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
@@ -69,7 +73,7 @@
 
     <!-- end sidenav -->
 
-    <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
+    <main class="relative transition-all duration-200 ease-in-out xl:ml-68">
       <!-- Navbar -->
       <nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start" navbar-main navbar-scroll="false">
         <div class="flex items-center mt-4 justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
@@ -80,7 +84,7 @@
                 <a class="text-white opacity-50" href="javascript:;">Pages</a>
               </li>
             </ol>
-            <h6 class="mb-0 font-bold text-white capitalize">Dashboard</h6>
+            <h6 class="mb-0 font-bold text-white capitalize">@yield('part')</h6>
           </nav>
 
           <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
@@ -92,10 +96,31 @@
                 <a class="inline-block px-8 py-2 mb-0 mr-4 text-xs font-bold text-center text-blue-500 uppercase align-middle transition-all ease-in bg-transparent border border-blue-500 border-solid rounded-lg shadow-none cursor-pointer leading-pro hover:-translate-y-px active:shadow-xs hover:border-blue-500 active:bg-blue-500 active:hover:text-blue-500 hover:text-blue-500 tracking-tight-rem hover:bg-transparent hover:opacity-75 hover:shadow-none active:text-white active:hover:bg-transparent" target="_blank" href="https://www.creative-tim.com/builder/soft-ui?ref=navbar-dashboard&amp;_ga=2.76518741.1192788655.1647724933-1242940210.1644448053">Online Builder</a>
               </li> -->
               <li class="flex items-center">
-                <a href="./pages/sign-in.html" class="block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand">
-                  <span class="hidden sm:inline">Admin</span>
-                  <i class="fa fa-user sm:mr-1"></i>
-                </a>
+                  @php
+                      // Ambil objek user yang sedang login (Admin)
+                      $adminUser = Auth::user(); 
+
+                      // Logika foto profil dinamis
+                      // Menggunakan photo_profile dari DB atau default image
+                      $photoPath = $adminUser && $adminUser->photo_profile 
+                          ? asset('storage/' . $adminUser->photo_profile) 
+                          : asset('assets/img/user.jpg');
+                  @endphp
+
+                  {{-- Asumsi link ini mengarah ke halaman profil Admin --}}
+                  <a href="{{ route('user.profile.show') ?? '#' }}" 
+                    class="block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand flex items-center">
+                      
+                      {{-- Username/Nama Admin --}}
+                      <span class="hidden sm:inline text-base font-bold">
+                          {{ $adminUser->username ?? $adminUser->name ?? 'Admin' }}
+                      </span>
+                      
+                      {{-- Foto Profil --}}
+                      <img class="w-8 h-8 rounded-full object-cover ml-2 border border-white" 
+                          src="{{ $photoPath }}" 
+                          alt="{{ $adminUser->username ?? $adminUser->name ?? 'Admin' }}" />
+                  </a>
               </li>
             </ul>
           </div>
@@ -109,32 +134,14 @@
       <!-- end cards -->
 
       <footer class="pt-4 fixed bottom-0 bg-white mb-4 w-[75%] mx-6 border border-white rounded-xl shadow-lg dark:bg-slate-850 dark:shadow-dark-lg">
-          <div class="w- full pb-3 ml-4">
-            <div class="flex flex-row items-center lg:justify-between">
-              <div class="w-full max-w-full mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
-                <div class="text-sm leading-normal text-center text-slate-500 lg:text-left">
-                  ©
-                  <script>
-                    document.write(new Date().getFullYear() + ",");
-                  </script>
-                  made with <i class="fa fa-heart"></i> by
-                  <a href="https://www.creative-tim.com" class="font-semibold text-slate-700 dark:text-white" target="_blank">Creative Tim</a>
-                  for a better web.
-                </div>
-              </div>
-              <div class="w-full max-w-full px-3  mt-0 shrink-0 lg:w-1/2 lg:flex-none">
-                <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
-                  <li class="nav-item">
-                    <a href="https://www.creative-tim.com" class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500" target="_blank">Creative Tim</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="https://www.creative-tim.com/presentation" class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500" target="_blank">About Us</a>
-                  </li>
-                </ul>
-              </div>
+        <div class="w- full pb-3 ml-4">
+          <div class="flex flex-row items-center lg:justify-between">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-black">
+            &copy; {{ date('Y') }} RentHub. All rights reserved.
             </div>
           </div>
-        </footer>
+        </div>
+      </footer>
     </main>
   </body>
   <!-- plugin for charts  -->
@@ -143,4 +150,5 @@
   <script src="{{asset('argon/build/assets/js/plugins/perfect-scrollbar.min.js')}}" async></script>
   <!-- main script file  -->
   <script src="{{asset('argon/build/assets/js/argon-dashboard-tailwind.js?v=1.0.1')}}" async></script>
+  @stack('scripts')
 @endsection

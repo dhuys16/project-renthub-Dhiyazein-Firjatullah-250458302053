@@ -13,7 +13,7 @@
         
         {{-- Tombol Kembali dan Edit (Edit disembunyikan jika ini dilihat oleh Customer, bukan Vendor) --}}
         <div>
-            <a href="{{ route('vendors.products.index') }}" 
+            <a href="{{ route('products.index') }}" 
                class="inline-block px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition">
                 ← Kembali ke Daftar
             </a>
@@ -94,7 +94,7 @@
                 </div>
             </div>
             
-            <div class="card p-4 mb-6 shadow-lg">
+            <div class="card p-4 my-6 shadow-lg">
                 <h4 class="font-semibold text-lg mb-3">
                     <i class="fas fa-store mr-2 text-indigo-500"></i> Info Pemilik
                 </h4>

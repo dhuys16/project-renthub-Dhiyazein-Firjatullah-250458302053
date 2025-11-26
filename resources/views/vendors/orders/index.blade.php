@@ -2,11 +2,10 @@
 
 @section('title', 'Manajemen Pesanan')
 
+@section('part', 'Pesanan')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
-    <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-3xl font-bold text-gray-800">Manajemen Pesanan Masuk</h2>
-    </div>
 
     {{-- Kartu Daftar Pesanan --}}
     <div class="bg-white p-6 rounded-xl shadow-lg">

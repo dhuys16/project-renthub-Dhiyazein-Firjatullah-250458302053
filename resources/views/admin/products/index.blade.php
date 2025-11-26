@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
+@section('title', 'Daftar Produk')
+
+@section('part', 'Daftar Pengguna')
+
 @section('content')
+<section class="mb-[50px]">
 <div class="w-full px-6 py-6 mx-auto">
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -14,7 +19,7 @@
                 {{-- Asumsi kolom 'picture' menyimpan path gambar --}}
                 <img src="{{ asset('storage/' . $product->picture) }}" 
                      alt="Foto {{ $product->name }}" 
-                     class="w-full h-full object-cover">
+                     class="w-full h-full object-contain">
                 </a>
             </div>
 
@@ -52,7 +57,7 @@
                     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm transition duration-150">
+                        <button type="submit" class="!bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm transition duration-150">
                             Hapus
                         </button>
                     </form>
@@ -72,4 +77,5 @@
     </div>
 
 </div>
+</section>
 @endsection

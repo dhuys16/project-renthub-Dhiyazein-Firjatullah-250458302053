@@ -2,6 +2,8 @@
 
 @section('title', 'Edit Produk: ' . $product->name)
 
+@section('part', 'Edit Produk')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
 

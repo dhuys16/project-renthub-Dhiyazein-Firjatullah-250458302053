@@ -1,20 +1,20 @@
 @extends('layouts.admin ')
 
+@section('title', 'Detail Produk: ' . $product->name)
+
+@section('part', 'Detail Pengguna')
+
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
 
     <div class="mb-6 flex justify-between items-center bg-white p-6 rounded-xl shadow-lg">
-        <h2 class="text-2xl font-bold text-gray-800">Detail Produk: {{ $product->name }}</h2>
+        <h2 class="text-xl font-bold text-gray-800">Detail Produk: {{ $product->name }}</h2>
         
         {{-- Tombol Kembali dan Edit --}}
         <div>
-            <a href="{{ route('vendors.products.index') }}" 
+            <a href="{{ route('admin.products.index') }}" 
                class="inline-block px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition">
                 ← Kembali ke Daftar
-            </a>
-            <a href="{{ route('vendors.products.edit', $product) }}" 
-               class="inline-block px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-md hover:bg-indigo-700 transition ml-2">
-                Edit Produk
             </a>
         </div>
     </div>
@@ -95,22 +95,48 @@
 
                 <div class="text-center">
                     <i class="fas fa-chart-bar text-indigo-500 mr-2"></i>
-                    <span class="text-sm text-gray-600">Total disewa: **X** kali (Perlu Query Transaksi)</span>
+                    {{-- Menggunakan atribut order_details_count yang dimuat oleh Controller --}}
+                    <span class="text-sm text-gray-600">Total disewa: <strong>{{ $product->order_details_count ?? 0 }}</strong> kali </span> 
                 </div>
             </div>
 
             {{-- Detail Vendor --}}
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Informasi Kepemilikan</h3>
-                <p class="text-sm text-gray-600">
-                    Diunggah Oleh: **{{ $product->vendor->username ?? 'Vendor Tidak Ditemukan' }}**
-                </p>
-                <p class="text-sm text-gray-600 mt-2">
-                    Email Vendor: <span class="font-medium text-indigo-600">{{ $product->vendor->email ?? '-' }}</span>
-                </p>
-                <p class="text-xs text-gray-400 mt-3">
-                    Terakhir Diperbarui: {{ $product->updated_at->diffForHumans() }}
-                </p>
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6 border-l-4 border-indigo-500">
+                <h4 class="font-semibold text-lg mb-3">
+                    <i class="fas fa-store mr-2 text-indigo-500"></i> Info Kepemilikan
+                </h4>
+                
+                @php
+                    $vendor = $product->vendor; // Ambil objek Vendor (User Model)
+                    
+                    // Logika foto profil dinamis
+                    $photoPath = $vendor->photo_profile 
+                        ? asset('storage/' . $vendor->photo_profile) 
+                        : asset('assets/img/user.jpg');
+                @endphp
+
+                {{-- [PERBAIKAN KRITIS] --}}
+                {{-- 1. Mengubah 'items-center' menjadi 'items-end' untuk perataan rata bawah. --}}
+                <a href="{{ route('user.public.vendors.show', $vendor) }}" 
+                class="block p-3 -m-3 rounded-lg hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer flex items-end space-x-4">
+                    
+                    {{-- 2. Mengubah ukuran menjadi h-16 w-16 untuk tampilan yang lebih besar dan jelas. --}}
+                    {{-- 'object-cover' akan memastikan foto tetap proporsional dan tidak gepeng. --}}
+                    <img class="h-16 w-16 rounded-full object-cover border border-gray-300 shadow-sm flex-shrink-0" 
+                        src="{{ $photoPath }}" 
+                        alt="{{ $vendor->username ?? $vendor->name }}">
+
+                    <div>
+                        {{-- Username Vendor --}}
+                        <p class="text-base font-bold text-gray-900 leading-tight">
+                            {{ $vendor->username ?? $vendor->name }}
+                        </p>
+                        {{-- Label --}}
+                        <p class="text-sm text-indigo-600 mt-1 flex items-center">
+                            <i class="fas fa-external-link-alt mr-1 text-xs"></i> Kunjungi Toko
+                        </p>
+                    </div>
+                </a>
             </div>
             
         </div>

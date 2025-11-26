@@ -2,15 +2,18 @@
 
 @section('title','Tambah Produk Baru')
 
+@section('part', 'Tambah Produk')
+
 @section('content')
 
 <div class="w-full px-6 py-6 mx-auto">
-    <div class="bg-white p-6 rounded-xl shadow-lg mb-[64px]">
-    <div class="mb-6">
+    <div class="mb-6 bg-white p-6 rounded-xl shadow-lg">
         <h2 class="text-2xl font-bold text-gray-800">Tambah Produk Baru ke RentHub</h2>
         <p class="text-gray-600">Isi detail produk yang ingin Anda sewakan.</p>
     </div>
 
+    <div class="bg-white p-6 rounded-xl shadow-lg mb-[64px]">
+    
     {{-- Kartu Formulir --}}
         
         {{-- Pesan Sukses/Error --}}

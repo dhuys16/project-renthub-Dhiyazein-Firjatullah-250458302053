@@ -30,7 +30,7 @@ class Order extends Model
     }
 
     // Relasi One-to-Many: Order memiliki banyak detail item sewa.
-    public function details(): HasMany
+    public function details()
     {
         return $this->hasMany(OrderDetail::class);
     }

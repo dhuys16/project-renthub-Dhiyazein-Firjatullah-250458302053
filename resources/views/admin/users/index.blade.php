@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@section('title', 'Daftar User')
+
+@section('part', 'Daftar Pengguna')
+
 @section('content')
 <body class="m-0 font-sans text-base antialiased font-normal leading-default bg-gray-50 text-slate-500">
     <div class="absolute bg-blue-500 min-h-75"></div>
@@ -12,7 +16,8 @@
                     <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
             @endif
-
+                
+            <section class="mb-[40px]">
             <div class="flex flex-wrap mb-10">
                 <div class="flex-none w-full px-3">
                     <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-solid shadow-xl rounded-2xl bg-clip-border">
@@ -123,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            
+            </section>
         </div>
     </main>
 </body>
