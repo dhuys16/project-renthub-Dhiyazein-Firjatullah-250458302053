@@ -20,7 +20,7 @@
     </div>
 
     {{-- Layout Dua Kolom untuk Detail --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-[64px]">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-[16px]">
 
         {{-- KOLOM 1 & 2: Foto dan Deskripsi --}}
         <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
@@ -140,6 +140,52 @@
             </div>
             
         </div>
+
+    </div>
+
+{{--- BAGIAN BARU: DAFTAR ULASAN/REVIEW PELANGGAN (DITEMPATKAN DI BAWAH KOLOM UTAMA) ---}}
+    <div class="bg-white p-6 rounded-xl shadow-lg mt-6 mb-[64px]">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Ulasan Pelanggan ({{ $product->reviews->count() }})</h3>
+
+        @forelse ($product->reviews as $review)
+            <div class="border-b pb-4 mb-4 last:border-b-0 last:pb-0">
+                {{-- Detail User dan Rating --}}
+                <div class="flex items-start mb-2">
+                    {{-- Avatar/Inisial User --}}
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-semibold mr-3 flex-shrink-0">
+                        @if ($review->user->name ?? false)
+                            {{ substr($review->user->name, 0, 1) }}
+                        @else
+                            <i class="fas fa-user"></i>
+                        @endif
+                    </div>
+                    <div class="flex-grow">
+                        <p class="font-semibold text-gray-800">{{ $review->user->name ?? 'Pelanggan' }}</p>
+                        <div class="flex items-center text-sm">
+                            {{-- Tampilkan rating bintang --}}
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fas fa-star text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                            @endfor
+                            <span class="text-gray-500 ml-2">({{ $review->rating }}/5)</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Komentar Review --}}
+                <p class="text-gray-700 mt-2 pl-12 italic">
+                    "{{ $review->comment }}"
+                </p>
+
+                {{-- Tanggal Review --}}
+                <p class="text-xs text-gray-400 mt-2 pl-12">
+                    Tanggal: {{ $review->created_at->format('d M Y H:i') }}
+                </p>
+            </div>
+        @empty
+            <div class="text-center py-10">
+                <p class="text-gray-500">Belum ada ulasan untuk produk ini.</p>
+            </div>
+        @endforelse
 
     </div>
 

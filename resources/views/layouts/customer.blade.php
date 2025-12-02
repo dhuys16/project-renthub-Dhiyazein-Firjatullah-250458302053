@@ -224,7 +224,8 @@
             @yield('content')
           </main>
 
-          <footer class="flex items-center justify-between p-4 bg-white border-t dark:bg-darker dark:border-primary-darker">
+          <footer class="flex items-center justify-between p-4 bg-white border-t dark:bg-darker dark:border-primary-darker
+                        fixed bottom-0 inset-x-0 z-50 w-full"> {{-- <--- TAMBAHAN KELAS UNTUK FIX FOOTER --}}
               <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-black">
               &copy; {{ date('Y') }} RentHub. All rights reserved.
               </div>

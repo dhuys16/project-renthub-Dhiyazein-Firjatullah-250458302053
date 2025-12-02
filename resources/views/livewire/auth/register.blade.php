@@ -62,15 +62,27 @@
                             
                             {{-- Input NIK --}}
                             <div class="mb-[22px]">
+                                <label for="ktp_file" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    KTP (untuk jaminan)
+                                </label>
                                 <input
-                                    wire:model.lazy="nik"
-                                    key="input-nik"
-                                    type="text"
-                                    placeholder="Nomor NIK (16 digit)"
-                                    maxlength="16"
-                                    class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-hidden border-stroke text-body-color placeholder:text-dark-6 focus:border-primary focus-visible:shadow-none @error('nik') border-red-500 @enderror"
+                                    {{-- Menggunakan wire:model.lazy="nik" sesuai kode sebelumnya. 
+                                    Idealnya gunakan wire:model tanpa modifier untuk file upload. --}}
+                                    wire:model="ktp" 
+                                    key="input-ktp"
+                                    type="file"
+                                    id="ktp_file"
+                                    accept="image/jpeg,image/png,image/jpg" {{-- Membatasi hanya gambar --}}
+                                    
+                                    {{-- PENTING: Untuk file upload, Anda mungkin perlu menambahkan wire:loading atau validasi tambahan di Livewire component PHP --}}
+                                    class="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-hidden border-stroke text-body-color placeholder:text-dark-6 focus:border-primary focus-visible:shadow-none @error('ktp') border-red-500 @enderror"
                                 />
-                                @error('nik')<p class="mt-2 text-sm text-red-600 text-left">{{ $message }}</p>@enderror
+                                {{-- Anda bisa menampilkan nama file yang sedang diunggah di sini --}}
+                                @if ($ktp)
+                                    <p class="mt-1 text-xs text-indigo-600">File terpilih: {{ is_string($ktp) ? $ktp : $ktp->getClientOriginalName() }}</p>
+                                @endif
+
+                                @error('ktp')<p class="mt-2 text-sm text-red-600 text-left">{{ $message }}</p>@enderror
                             </div>
 
                             {{-- Input Name --}}
@@ -210,14 +222,53 @@
     {{-- ⭐ MODAL SYARAT & KETENTUAN ⭐ --}}
     <div id="terms-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-[100]">
         <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-            <h3 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">Syarat dan Ketentuan RentHub</h3>
-            <div class="max-h-96 overflow-y-auto text-sm text-gray-700 space-y-3 mb-6">
-                <p>1. **Ketentuan Umum:** Dengan mendaftar, Anda menyetujui bahwa data yang diberikan adalah valid dan bertanggung jawab atas semua aktivitas akun Anda.</p>
-                <p>2. **Peran Vendor:** Pendaftaran sebagai Vendor bersifat final dan tunduk pada persetujuan admin (jika ada verifikasi). Vendor wajib menjamin kualitas produk sewaan.</p>
-                <p>3. **Biaya:** Ada biaya layanan sebesar 10% dari total transaksi untuk setiap penyewaan produk yang berhasil melalui platform RentHub.</p>
-                <p>4. **Pembatalan:** Pembatalan pesanan setelah pembayaran dapat dikenakan denda atau penalti sesuai kebijakan yang berlaku.</p>
-                <p>5. **Privasi:** Data pribadi Anda akan digunakan sesuai kebijakan privasi kami.</p>
-            </div>
+            <h1 class="text-2xl font-extrabold text-indigo-700 mb-2">📜 Syarat dan Ketentuan RentHub</h1>
+            <p class="mb-6 text-sm italic border-b pb-3">
+                Dengan menekan tombol "Saya Setuju dan Terima", Anda menyatakan telah membaca, memahami, dan menyetujui semua poin Syarat dan Ketentuan di bawah ini.
+            </p>
+
+            {{-- 1. Ketentuan Umum Akun dan Platform --}}
+            <h2 class="text-lg font-bold text-gray-800 mt-4 mb-2">1. Ketentuan Umum Akun dan Platform</h2>
+            <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                <li>Persetujuan Data: Anda menjamin bahwa semua data yang diberikan saat mendaftar adalah valid, benar, dan bertanggung jawab atas semua aktivitas akun Anda.</li>
+                <li>Perubahan Syarat: RentHub berhak mengubah Syarat dan Ketentuan ini sewaktu-waktu. Perubahan akan berlaku efektif segera setelah diunggah ke platform.</li>
+            </ul>
+
+            {{-- 2. Peran Vendor (Penyedia Sewa) --}}
+            <h2 class="text-lg font-bold text-gray-800 mt-4 mb-2">2. Peran Vendor (Penyedia Sewa)</h2>
+            <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                <li>Kewajiban Kualitas: Vendor wajib menjamin kualitas, kelayakan pakai, dan kebersihan produk yang disewakan sesuai dengan deskripsi yang diunggah.</li>
+                <li>Jaminan Pengembalian (KTP): Vendor berhak meminta jaminan tambahan, seperti Kartu Identitas (KTP/SIM) penyewa, sebagai jaminan bahwa barang yang disewakan akan dikembalikan tepat waktu dan dalam kondisi semula. KTP hanya digunakan untuk tujuan verifikasi dan jaminan pengembalian.</li>
+            </ul>
+
+            {{-- 3. Biaya Layanan dan Pembayaran --}}
+            <h2 class="text-lg font-bold text-gray-800 mt-4 mb-2">3. Biaya Layanan dan Pembayaran</h2>
+            <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                <li>Biaya Layanan RentHub: RentHub mengenakan biaya layanan sebesar 10% (sepuluh persen) dari total transaksi sewa untuk setiap penyewaan produk yang berhasil melalui platform.</li>
+                <li>Pembayaran: Semua pembayaran harus dilakukan melalui sistem pembayaran resmi RentHub.</li>
+            </ul>
+
+            {{-- 4. Tanggung Jawab Penyewa dan Denda --}}
+            <h2 class="text-lg font-bold text-gray-800 mt-4 mb-2">4. Tanggung Jawab Penyewa dan Denda</h2>
+            <p class="mb-2 text-sm">Penyewa bertanggung jawab penuh atas barang yang disewa sejak barang diterima hingga dikembalikan kepada Vendor.</p>
+            <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                <li>Denda Keterlambatan Pengembalian: Jika barang tidak dikembalikan tepat pada waktu yang disepakati, penyewa akan dikenakan denda harian sebesar 100% (seratus persen) dari harga sewa harian hingga barang dikembalikan.</li>
+                <li>Denda Kerusakan: Jika barang dikembalikan dalam kondisi rusak (tidak dapat diperbaiki), penyewa wajib membayar biaya perbaikan penuh yang ditetapkan oleh Vendor, ditambah kerugian waktu sewa selama masa perbaikan.</li>
+                <li>Ganti Rugi Kehilangan: Jika barang hilang total atau rusak parah hingga tidak dapat digunakan lagi (kerusakan total), penyewa wajib mengganti rugi sebesar nilai penuh barang baru yang ditentukan oleh Vendor.</li>
+            </ul>
+
+            {{-- 5. Pembatalan --}}
+            <h2 class="text-lg font-bold text-gray-800 mt-4 mb-2">5. Pembatalan</h2>
+            <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                <li>Kebijakan Pembatalan: Pembatalan pesanan setelah pembayaran dapat dikenakan biaya pembatalan yang besarnya bervariasi tergantung waktu pembatalan, sesuai dengan kebijakan pembatalan yang ditetapkan oleh Vendor dan platform.</li>
+                <li>Pengembalian Dana: Pengembalian dana (jika ada) akan diproses sesuai dengan kebijakan platform setelah dikurangi biaya layanan dan denda pembatalan (jika berlaku).</li>
+            </ul>
+
+            {{-- 6. Privasi Data --}}
+            <h2 class="text-lg font-bold text-gray-800 mt-4 mb-2">6. Privasi Data</h2>
+            <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                <li>Kebijakan Privasi: Data pribadi Anda akan digunakan sesuai dengan Kebijakan Privasi RentHub. Kami berkomitmen untuk melindungi kerahasiaan data Anda dan tidak akan menyalahgunakannya.</li>
+            </ul>
             <div class="flex justify-end space-x-3">
                 <button type="button" onclick="closeTermsModal()" class="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300">
                     Tutup

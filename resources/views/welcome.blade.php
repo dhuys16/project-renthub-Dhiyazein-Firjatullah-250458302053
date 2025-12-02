@@ -41,7 +41,7 @@
                 {{-- ================================================================= --}}
                 @auth
                     @php
-                        $dashboardRoute = Auth::user()->isAdmin() ? route('admin.dashboard') : (Auth::user()->isVendor() ? route('vendors.dashboard') : route('home'));
+                        $dashboardRoute = Auth::user()->isAdmin() ? route('admin.dashboard') : (Auth::user()->isVendor() ? route('vendors.dashboard') : route('products.index'));
                     @endphp
                     
                     {{-- Tombol 1: Dashboard (Background Solid Indigo) --}}

@@ -9,13 +9,17 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Livewire\Component;
 use Livewire\Attributes\Rule;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+
 
 class Register extends Component
 {
+    use WithFileUploads;
     /** @var string */
     public $username = '';
 
-    public $nik = '';
+    public $ktp = '';
 
     public $name = '';
 
@@ -49,14 +53,23 @@ class Register extends Component
             'link_gmaps' => ['required', 'string'],
             'phone_number' => ['required', 'string', 'max:15'], 
             'password' => ['required', 'min:8', 'same:passwordConfirmation'],
-            'nik' => ['required', 'string', 'unique:users', 'max:16'],
+            'ktp' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'name' => ['required', 'string', 'max:255'],
             'terms' => ['accepted'],
         ]);
 
+        $ktpPath = null;
+    
+        // [PERBAIKAN]: Cek apakah $this->ktp adalah objek UploadedFile sebelum memanggil store()
+        if ($this->ktp) { 
+            // Menyimpan file KTP ke storage dan mendapatkan path-nya
+            $ktpPath = $this->ktp->store('ktp_uploads', 'public');
+        }
+        // === END: LOGIKA UPLOAD FILE KTP ===
+
         $user = User::create([
             'email' => $this->email,
-            'nik' => $this->nik,
+            'ktp' => $ktpPath,
             'name' => $this->name,
             'username' => $this->username,
             'address' => $this->address, // <<< SIMPAN DATA BARU

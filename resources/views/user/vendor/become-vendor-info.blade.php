@@ -101,10 +101,15 @@
             
             {{-- Tombol: Jadi Vendor Sekarang --}}
             {{-- Asumsi route untuk mengaktifkan status/mengubah role adalah 'customer.vendor.activate' --}}
-            <a href="{{ route('customer.vendor.register') ?? route('vendors.products.create') }}" 
-               class="inline-flex justify-center py-3 px-8 border border-transparent shadow-lg text-lg font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                JADI VENDOR SEKARANG
-            </a>
+            <form method="POST" action="{{ route('customer.vendor.register') }}">
+                @csrf
+                
+                {{-- Tombol Submit Form --}}
+                <button type="submit"
+                class="inline-flex justify-center py-4 px-4 border border-transparent shadow-lg text-lg font-medium rounded-xl text-white  !bg-green-600 hover:bg-green-700 transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    JADI VENDOR SEKARANG
+                </button>
+            </form>
         </div>
     </div>
 </div>
