@@ -30,7 +30,7 @@
                                 Produk Sewa
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Penyewa | Total
+                                Total Harga
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
@@ -58,9 +58,8 @@
                                     {{ \Carbon\Carbon::parse($detail->rent_end_date)->format('d/m') }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                {{ $order->user->name ?? 'User Dihapus' }}<br>
-                                <span class="font-bold text-indigo-600">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @php
