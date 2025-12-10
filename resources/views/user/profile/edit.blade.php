@@ -9,7 +9,7 @@
     
     {{-- HEADER --}}
     <div class="mb-6 flex justify-between items-center bg-white p-6 rounded-xl shadow-lg">
-        <h2 class="text-2xl font-bold text-gray-800">Edit Profil Saya</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Edit Profil</h2>
         
         <a href="{{ route('user.profile.show') }}" 
            class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition">

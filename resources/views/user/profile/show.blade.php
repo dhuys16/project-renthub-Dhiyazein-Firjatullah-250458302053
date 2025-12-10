@@ -16,7 +16,7 @@
 
     {{-- HEADER DAN TOMBOL EDIT --}}
     <div class="mb-6 flex justify-between items-center bg-white p-6 rounded-xl shadow-lg">
-        <h2 class="text-2xl font-bold text-gray-800">Detail Profil Saya</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Profil Saya</h2>
         
         <a href="{{ route('user.profile.edit') }}" 
            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-md hover:bg-indigo-700 transition">

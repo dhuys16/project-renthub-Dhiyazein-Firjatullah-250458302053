@@ -7,11 +7,13 @@
 @section('content')
 <div class="w-full px-6 py-6 mx-auto">
 
-    <div class="bg-white p-6 rounded-xl shadow-lg mb-[64px]">
-    <div class="mb-6">
+    <div class="mb-6 bg-white p-6 rounded-xl shadow-lg">
         <h2 class="text-2xl font-bold text-gray-800">Edit Produk: {{ $product->name }}</h2>
         <p class="text-gray-600">Perbarui detail produk yang Anda sewakan.</p>
     </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-lg mb-[64px]">
+    
 
     {{-- Kartu Formulir --}}
         {{-- Pesan Sukses/Error --}}
